@@ -1,0 +1,6 @@
+{
+  "name": "Atrividinhos — Enxoval para Bebês e Moda Infantil",
+  "description": "Site institucional e vitrine da Atrividinhos em Fortaleza – CE: enxovais para recém-nascidos e moda infantil feminina e masculina de 0 a 6 anos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
