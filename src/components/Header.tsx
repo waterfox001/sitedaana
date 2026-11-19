@@ -1,28 +1,48 @@
 import React, { useState } from 'react';
 import { Menu, MessageCircle, X } from 'lucide-react';
 import { STORE_CONFIG, getWhatsAppUrl } from '../data/storeConfig';
-import { BrandLogoMark } from './HandDrawnDoodles';
 
-const NAV_LINKS = [
-  { label: 'Início', href: '#inicio' },
-  { label: 'Coleções', href: '#colecoes' },
-  { label: 'Sobre nós', href: '#sobre' },
-  { label: 'Localização', href: '#localizacao' },
-  { label: 'Contato', href: '#contato' },
+export type PageRoute = '/' | '/colecoes' | '/sobre' | '/localizacao' | '/contato';
+
+interface HeaderProps {
+  currentPath: PageRoute;
+  onNavigate: (path: PageRoute) => void;
+}
+
+const NAV_LINKS: { label: string; path: PageRoute }[] = [
+  { label: 'Início', path: '/' },
+  { label: 'Coleções', path: '/colecoes' },
+  { label: 'Sobre nós', path: '/sobre' },
+  { label: 'Localização', path: '/localizacao' },
+  { label: 'Contato', path: '/contato' },
 ];
 
-export function Header() {
+export function Header({ currentPath, onNavigate }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    path: PageRoute
+  ) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    onNavigate(path);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-[#232129]/8 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-8 px-4 sm:h-16 sm:px-6 lg:px-8">
-        {/* Zona 1: Marca (elemento único em uma linha) */}
+        {/* Zona 1: Logotipo oficial + marca em linha única */}
         <a
-          href="#inicio"
+          href="/"
+          onClick={(e) => handleLinkClick(e, '/')}
           className="inline-flex shrink-0 items-center gap-2.5 whitespace-nowrap font-display text-xl font-semibold tracking-tight text-[#232129] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C95B42]"
         >
-          <BrandLogoMark className="h-8 w-8 shrink-0" />
+          <img
+            src={STORE_CONFIG.logoUrl}
+            alt="Logo Atrividinhos"
+            className="h-9 w-9 shrink-0 rounded-full border border-[#232129]/12 object-cover sm:h-10 sm:w-10"
+          />
           <span>{STORE_CONFIG.brandName}</span>
         </a>
 
@@ -31,15 +51,24 @@ export function Header() {
           aria-label="Navegação principal"
           className="hidden items-center gap-7 md:flex"
         >
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="shrink-0 whitespace-nowrap text-sm font-medium text-[#5A5666] underline-offset-4 transition-colors duration-150 hover:text-[#232129] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C95B42]"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isActive = currentPath === link.path;
+            return (
+              <a
+                key={link.path}
+                href={link.path}
+                onClick={(e) => handleLinkClick(e, link.path)}
+                aria-current={isActive ? 'page' : undefined}
+                className={`shrink-0 whitespace-nowrap text-sm underline-offset-8 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C95B42] ${
+                  isActive
+                    ? 'font-semibold text-[#C95B42] underline decoration-2'
+                    : 'font-medium text-[#5A5666] hover:text-[#232129] hover:underline'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Zona 3: Ação principal (WhatsApp) + gatilho mobile */}
@@ -79,17 +108,25 @@ export function Header() {
           className="border-t border-[#232129]/8 bg-white px-4 py-4 md:hidden"
         >
           <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex min-h-[44px] items-center rounded-xl px-3 text-base font-medium text-[#232129] transition-colors hover:bg-[#FAF9F6]"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = currentPath === link.path;
+              return (
+                <li key={link.path}>
+                  <a
+                    href={link.path}
+                    onClick={(e) => handleLinkClick(e, link.path)}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`flex min-h-[44px] items-center rounded-xl px-3 text-base transition-colors ${
+                      isActive
+                        ? 'bg-[#FADCD4]/40 font-semibold text-[#C95B42]'
+                        : 'font-medium text-[#232129] hover:bg-[#FAF9F6]'
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       )}

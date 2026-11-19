@@ -27,14 +27,14 @@ export function AboutAndDifferentials() {
         {/* Sobre a Atrividinhos */}
         <div className="grid items-stretch gap-10 lg:grid-cols-12 lg:gap-12">
           <div className="flex flex-col justify-center lg:col-span-7">
-            <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-[#5A5666]">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#C95B42]">
               <span>Sobre a Atrividinhos</span>
               <HandDrawnHeart className="h-4 w-4" />
             </div>
 
-            <h2 className="mt-2 max-w-xl font-display text-3xl font-semibold tracking-tight text-[#232129] text-balance sm:text-4xl">
+            <h1 className="mt-2 max-w-xl font-display text-3xl font-semibold tracking-tight text-[#232129] text-balance sm:text-4xl">
               {STORE_CONFIG.about.title}
-            </h2>
+            </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-[#5A5666] sm:text-lg">
               {STORE_CONFIG.about.text}

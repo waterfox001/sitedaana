@@ -47,6 +47,7 @@ export function NewArrivals() {
             >
               <MediaFrame
                 imageUrl={item.imageUrl}
+                secondaryImageUrl={item.secondaryImageUrl}
                 alt={item.imageAlt}
                 motif={item.motif}
                 accentBg={item.accentBg}

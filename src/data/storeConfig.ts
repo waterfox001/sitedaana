@@ -1,15 +1,40 @@
 /**
  * CONFIGURAÇÃO CENTRALIZADA DA LOJA — ATRIVIDINHOS
  *
- * Edite este arquivo para atualizar informações oficiais, horários,
- * formas de pagamento, links de WhatsApp, Instagram e endereço da loja.
+ * Edite este arquivo para atualizar informações oficiais, banners de campanha,
+ * promoções sazonais (como Black Friday), horários, formas de pagamento e contatos.
  */
+
+import type { CategorySlug } from './catalog';
+
+export interface HeroBannerSlide {
+  id: string;
+  kicker: string;
+  title: string;
+  subtitle: string;
+  primaryCta: string;
+  secondaryCta: string;
+  targetCategory: CategorySlug;
+  secondaryWhatsAppMsg: string;
+  imageUrl: string;
+  imageAlt: string;
+}
 
 export const STORE_CONFIG = {
   brandName: 'Atrividinhos',
-  tagline: 'Enxoval para Bebês e Moda Infantil (0 a 6 anos)',
+  brandSlogan: 'Jeitinho esperto de se vestir',
+  logoUrl: '/assets/aistudio/logo_atrividinhos_b0c755e5.jpg',
+  tagline: 'Enxoval para Bebês e Moda Infantil em Fortaleza (0 a 6 anos)',
   foundedDate: '10 de novembro de 2009',
   foundedYear: 2009,
+
+  promoStrip: {
+    enabled: true,
+    text: 'Black Friday Atrividinhos em Fortaleza · Condições especiais em enxoval para recém-nascidos e moda infantil (0 a 6 anos)',
+    ctaLabel: 'Aproveitar no WhatsApp',
+    whatsappMessage:
+      'Olá! Vi a promoção de Black Friday no site da Atrividinhos e quero saber as ofertas disponíveis!',
+  },
 
   address: {
     street: 'Rua General Sampaio, 909, Loja 05',
@@ -52,15 +77,60 @@ export const STORE_CONFIG = {
       'https://maps.google.com/maps?q=Rua%20General%20Sampaio%2C%20909%2C%20Centro%2C%20Fortaleza%20-%20CE&t=&z=16&ie=UTF8&iwloc=&output=embed',
   },
 
+  heroBanners: [
+    {
+      id: 'banner-black-friday-enxoval',
+      kicker: 'Black Friday Fortaleza · Loja no Centro · Desde 2009',
+      title: 'Pequenos momentos, grandes descobertas!',
+      subtitle:
+        'Enxoval para recém-nascidos e moda infantil de 0 a 6 anos em Fortaleza com ofertas especiais de Black Friday. Jeitinho esperto de se vestir!',
+      primaryCta: 'Ver ofertas e coleção',
+      secondaryCta: 'Falar no WhatsApp',
+      targetCategory: 'enxoval',
+      secondaryWhatsAppMsg:
+        'Olá! Vi as ofertas de Black Friday no site da Atrividinhos e gostaria de consultar peças de enxoval e moda infantil.',
+      imageUrl: '/src/assets/images/banner_enxoval_bebe_1795093118308.jpg',
+      imageAlt:
+        'Bebê sorrindo confortavelmente com conjunto de enxoval macio da loja Atrividinhos em Fortaleza',
+    },
+    {
+      id: 'banner-feminino-fortaleza',
+      kicker: 'Moda Infantil Feminina em Fortaleza · 0 a 6 anos',
+      title: 'Leveza e charme com preços de Black Friday.',
+      subtitle:
+        'Vestidos e conjuntos infantis no Centro de Fortaleza com atendimento ágil pelo WhatsApp para escolher tamanhos e estampas.',
+      primaryCta: 'Explorar moda feminina',
+      secondaryCta: 'Consultar tamanhos',
+      targetCategory: 'feminino',
+      secondaryWhatsAppMsg:
+        'Olá! Vi a coleção de Moda Infantil Feminina (Black Friday) no site da Atrividinhos e gostaria de ver os modelos disponíveis.',
+      imageUrl: '/src/assets/images/banner_moda_feminina_1795093117970.jpg',
+      imageAlt:
+        'Menina sorrindo com vestido floral infantil da coleção Atrividinhos Fortaleza',
+    },
+    {
+      id: 'banner-masculino-fortaleza',
+      kicker: 'Roupas de Bebê e Moda Masculina no Centro de Fortaleza',
+      title: 'Conforto para brincar e economia para a família.',
+      subtitle:
+        'Conjuntos masculinos, camisas polo e bermudas de 0 a 6 anos com condições especiais de Black Friday em Pix, dinheiro ou cartões.',
+      primaryCta: 'Explorar moda masculina',
+      secondaryCta: 'Garantir ofertas',
+      targetCategory: 'masculino',
+      secondaryWhatsAppMsg:
+        'Olá! Vi a coleção de Moda Infantil Masculina (Black Friday) no site da Atrividinhos e gostaria de consultar modelos e valores.',
+      imageUrl: '/src/assets/images/banner_moda_masculina_1795093118559.jpg',
+      imageAlt:
+        'Menino sorrindo usando camiseta e bermuda infantil da loja Atrividinhos em Fortaleza',
+    },
+  ] as HeroBannerSlide[],
+
   hero: {
     title: 'Pequenos momentos, grandes descobertas!',
     subtitle:
       'Tudo o que seu pequeno precisa para crescer com conforto, carinho e muito estilo.',
     primaryCta: 'Conheça nossas coleções',
     secondaryCta: 'Fale com a gente',
-    /**
-     * Substitua pela foto real da loja ou coleção infantil (ex: '/images/hero-loja.jpg').
-     */
     imageUrl: '/src/assets/images/hero_atrividinhos_boutique_1794948049688.jpg' as string | null,
     imageAlt:
       'Vitrine editorial Atrividinhos com enxoval para recém-nascidos e moda infantil no Centro de Fortaleza',

@@ -1,159 +1,185 @@
-import React from 'react';
-import { ArrowDownRight, MessageCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircle,
+} from 'lucide-react';
+import type { CategorySlug } from '../data/catalog';
 import { STORE_CONFIG, getWhatsAppUrl } from '../data/storeConfig';
 import {
-  HandDrawnCloud,
-  HandDrawnFlower,
-  HandDrawnHeart,
   HandDrawnRainbow,
   HandDrawnStar,
-  HandDrawnSun,
-  MotifIllustration,
 } from './HandDrawnDoodles';
 
-export function Hero() {
-  const hasRealHeroImage = Boolean(STORE_CONFIG.hero.imageUrl);
+interface HeroProps {
+  onSelectCategory: (category: CategorySlug) => void;
+}
+
+export function Hero({ onSelectCategory }: HeroProps) {
+  const banners = STORE_CONFIG.heroBanners;
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion || isPaused) return;
+
+    const timer = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % banners.length);
+    }, 6500);
+
+    return () => window.clearInterval(timer);
+  }, [banners.length, isPaused]);
+
+  const goPrev = () => {
+    setActiveSlide((prev) => (prev - 1 + banners.length) % banners.length);
+  };
+
+  const goNext = () => {
+    setActiveSlide((prev) => (prev + 1) % banners.length);
+  };
 
   return (
     <section
       id="inicio"
-      className="relative overflow-hidden bg-white pb-16 pt-10 sm:pb-20 sm:pt-14 lg:pb-24 lg:pt-16"
+      aria-label="Campanhas e coleções em destaque da Atrividinhos"
+      className="bg-white pb-4 pt-3 sm:pb-6 sm:pt-5"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Sutis elementos desenhados à mão no plano de fundo */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 mx-auto max-w-6xl">
-        <HandDrawnStar
-          className="animate-gentle-float absolute left-6 top-6 h-6 w-6 opacity-75 sm:left-10"
-          color="#E5B74B"
-        />
-        <HandDrawnCloud className="absolute right-8 top-4 hidden h-10 w-16 opacity-70 lg:block" />
-      </div>
+      <div className="mx-auto max-w-[1380px] px-3 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-3xl bg-[#232129] text-white">
+          <div className="relative min-h-[480px] sm:min-h-[510px] lg:min-h-[540px]">
+            {banners.map((slide, index) => {
+              const isCurrent = index === activeSlide;
+              const HeadingTag = index === 0 ? 'h1' : 'h2';
 
-      <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12 lg:px-8">
-        {/* Coluna textual */}
-        <div className="flex flex-col justify-center lg:col-span-6">
-          <p className="text-xs font-medium tracking-wide text-[#5A5666] sm:text-sm">
-            Desde {STORE_CONFIG.foundedYear}
-            <span aria-hidden="true" className="mx-2">
-              ·
-            </span>
-            Enxovais &amp; Moda Infantil (0 a 6 anos)
-            <span aria-hidden="true" className="mx-2">
-              ·
-            </span>
-            Centro de Fortaleza
-          </p>
-
-          <h1
-            className="mt-4 max-w-xl font-display font-semibold tracking-tight text-[#232129] text-balance"
-            style={{ fontSize: 'clamp(2.25rem, 4.1vw, 3.55rem)', lineHeight: 1.08 }}
-          >
-            {STORE_CONFIG.hero.title}
-          </h1>
-
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-[#5A5666] sm:text-lg">
-            {STORE_CONFIG.hero.subtitle}
-          </p>
-
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href="#colecoes"
-              className="inline-flex min-h-[46px] items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#C95B42] px-6 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-[#B24D36] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C95B42]"
-            >
-              <span>{STORE_CONFIG.hero.primaryCta}</span>
-              <ArrowDownRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-            </a>
-
-            <a
-              href={getWhatsAppUrl(
-                'Olá! Vim pelo site da Atrividinhos e gostaria de conhecer as peças disponíveis.'
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-[46px] items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-[#232129]/15 bg-[#FAF9F6] px-6 py-3 text-sm font-semibold text-[#232129] transition-colors duration-150 hover:border-[#18794E]/40 hover:bg-[#D7F0E5]/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#18794E]"
-            >
-              <MessageCircle className="h-4 w-4 shrink-0 text-[#18794E]" aria-hidden="true" />
-              <span>{STORE_CONFIG.hero.secondaryCta}</span>
-            </a>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-[#232129]/8 pt-6 text-xs text-[#5A5666] sm:text-sm">
-            <span>Rua General Sampaio, 909 · Loja 05</span>
-            <span aria-hidden="true">·</span>
-            <span>Atendimento presencial e pelo WhatsApp</span>
-          </div>
-        </div>
-
-        {/* Coluna editorial visual */}
-        <div className="relative flex items-stretch lg:col-span-6">
-          <div className="paper-canvas relative flex w-full flex-col justify-between overflow-hidden rounded-3xl border border-[#232129]/10 p-6 sm:p-8">
-            {/* Ilustrações delicadas nos cantos */}
-            <div className="flex items-start justify-between">
-              <HandDrawnRainbow className="h-14 w-24 sm:h-16 sm:w-28" />
-              <HandDrawnSun className="h-12 w-12 sm:h-14 sm:w-14" />
-            </div>
-
-            {/* Quadro principal para fotografia real ou composição ilustrada */}
-            <div className="my-4 flex flex-1 items-center justify-center">
-              {hasRealHeroImage ? (
-                <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-[#232129]/10 bg-white">
+              return (
+                <div
+                  key={slide.id}
+                  aria-hidden={!isCurrent}
+                  className={`absolute inset-0 transition-opacity duration-500 ${
+                    isCurrent
+                      ? 'z-10 opacity-100'
+                      : 'pointer-events-none z-0 opacity-0'
+                  }`}
+                >
+                  {/* Fotografia em camada absoluta ao fundo para nunca empurrar o texto */}
                   <img
-                    src={STORE_CONFIG.hero.imageUrl!}
-                    alt={STORE_CONFIG.hero.imageAlt}
+                    src={slide.imageUrl}
+                    alt={slide.imageAlt}
                     referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover"
+                    className="absolute inset-0 h-full w-full object-cover object-center sm:object-right"
                   />
-                </div>
-              ) : (
-                <div className="grid w-full grid-cols-2 gap-4">
-                  <div className="flex flex-col items-center justify-center rounded-2xl border border-[#232129]/8 bg-white p-4">
-                    <MotifIllustration
-                      motif="enxoval-kit"
-                      className="h-32 w-full sm:h-36"
-                    />
-                    <span className="mt-2 text-center font-display text-sm font-medium text-[#232129]">
-                      Enxoval Recém-Nascido
-                    </span>
-                  </div>
 
-                  <div className="flex flex-col items-center justify-center rounded-2xl border border-[#232129]/8 bg-white p-4">
-                    <MotifIllustration
-                      motif="feminino-vestido"
-                      className="h-32 w-full sm:h-36"
-                    />
-                    <span className="mt-2 text-center font-display text-sm font-medium text-[#232129]">
-                      Moda Infantil Feminina
-                    </span>
-                  </div>
+                  {/* Scrim escuro elegante para leitura confortável */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-[#232129] via-[#232129]/82 to-[#232129]/30 lg:bg-gradient-to-r lg:from-[#232129] lg:via-[#232129]/90 lg:to-transparent"
+                  />
 
-                  <div className="col-span-2 flex items-center justify-between gap-4 rounded-2xl border border-[#232129]/8 bg-white px-5 py-3">
-                    <div className="h-24 w-32 shrink-0">
-                      <MotifIllustration
-                        motif="masculino-conjunto"
-                        className="h-full w-full"
-                      />
+                  {/* Conteúdo textual e CTAs visíveis acima da imagem */}
+                  <div className="relative z-10 flex h-full flex-col justify-end p-6 pb-20 sm:p-10 sm:pb-20 lg:max-w-[56%] lg:justify-center lg:p-14 lg:pb-20">
+                    <div className="mb-3 flex items-center gap-3">
+                      <HandDrawnRainbow className="h-9 w-14 shrink-0" />
+                      <HandDrawnStar className="h-5 w-5 shrink-0" color="#FDF0C4" />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-display text-base font-medium text-[#232129]">
-                        Moda Masculina &amp; Novidades
-                      </span>
-                      <span className="mt-1 text-xs leading-relaxed text-[#5A5666]">
-                        Do tamanho bebê até os 6 anos, com peças pensadas para cada fase.
-                      </span>
+
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[#FDF0C4] sm:text-sm">
+                      {slide.kicker}
+                    </p>
+
+                    <HeadingTag
+                      className="mt-2.5 font-display font-semibold tracking-tight text-white text-balance"
+                      style={{
+                        fontSize: 'clamp(2rem, 3.8vw, 3.35rem)',
+                        lineHeight: 1.08,
+                      }}
+                    >
+                      {slide.title}
+                    </HeadingTag>
+
+                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/90 sm:text-base lg:text-lg">
+                      {slide.subtitle}
+                    </p>
+
+                    <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
+                      <button
+                        type="button"
+                        onClick={() => onSelectCategory(slide.targetCategory)}
+                        className="inline-flex min-h-[46px] items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#C95B42] px-6 py-3 text-sm font-semibold text-white transition-colors duration-150 hover:bg-[#D86B52] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        <span>{slide.primaryCta}</span>
+                        <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      </button>
+
+                      <a
+                        href={getWhatsAppUrl(slide.secondaryWhatsAppMsg)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[46px] items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-xs transition-colors duration-150 hover:border-white/50 hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        <MessageCircle
+                          className="h-4 w-4 shrink-0 text-[#8AE3B8]"
+                          aria-hidden="true"
+                        />
+                        <span>{slide.secondaryCta}</span>
+                      </a>
                     </div>
                   </div>
                 </div>
-              )}
+              );
+            })}
+          </div>
+
+          {/* Controles agrupados à esquerda para não colidir com o botão flutuante do WhatsApp */}
+          <div className="absolute bottom-5 left-6 z-20 flex items-center gap-5 sm:bottom-6 sm:left-10 lg:left-14">
+            <div
+              role="tablist"
+              aria-label="Escolher campanha do banner"
+              className="flex items-center gap-2"
+            >
+              {banners.map((slide, index) => {
+                const isSelected = index === activeSlide;
+                return (
+                  <button
+                    key={slide.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    aria-label={`Mostrar campanha ${index + 1}: ${slide.title}`}
+                    onClick={() => setActiveSlide(index)}
+                    className={`h-2.5 rounded-full transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                      isSelected
+                        ? 'w-8 bg-[#FDF0C4]'
+                        : 'w-2.5 bg-white/35 hover:bg-white/60'
+                    }`}
+                  />
+                );
+              })}
             </div>
 
-            {/* Rodapé ilustrado do quadro */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center gap-3">
-                <HandDrawnFlower className="h-7 w-7" />
-                <HandDrawnHeart className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-medium text-[#5A5666]">
-                Galeria Professor Brandão · Fortaleza
-              </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="Campanha anterior"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-[#232129]/75 text-white backdrop-blur-xs transition-colors hover:bg-[#232129] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="Próxima campanha"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-[#232129]/75 text-white backdrop-blur-xs transition-colors hover:bg-[#232129] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </button>
             </div>
           </div>
         </div>
